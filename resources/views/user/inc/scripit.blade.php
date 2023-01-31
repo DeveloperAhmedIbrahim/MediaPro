@@ -84,13 +84,13 @@
                     }
                     if(channel_type == "ondemand")
                     {
-                        embed_video_button = '<a href="javascript:void(0)" type="button" onclick="OpenEmbedVideoModal(&#39;'+video_url+'&#39;,&#39;'+channel_id+'&#39;)"  name="embeded_video" class="btn btn-sm btn-warning btn-icon waves-effect waves-light" title="This is an input title."><i class="la la-code"></i></a>';
+                        embed_video_button = '<a href="javascript:void(0)" type="button" onclick="OpenEmbedVideoModal(&#39;'+video_url+'&#39;,&#39;'+channel_id+'&#39;)"  name="embeded_video" class="btn btn-sm btn-primary"><i class="la la-code"></i></a>';
                     }
                     else if(channel_type == "linear_looped")
                     {
                         embed_video_button = "";
                     }
-                    video_rows += '<tr draggable="true" ondragstart="start()" ondragover="dragover()"><td style="width: 17%;"><div><ul style="list-style: none;padding-left: 0px;float: left;"><li><span class="fa fa-angle-up" style="float:left;"></span></li><li><span class="fa fa-angle-down" style="float:left;"></span></li></ul></div><video width="50" height="30" style="float:right;border: 0.5px solid lightgray;"><source src="'+video_url+'" type="video/mp4"></video></td><td><span class="videosOrder">'+video_decimal_count+'. </span> <input type="hidden" class="videosOrderInput" value="'+video_id+'" /> '+data[i].name+'</td><td>'+embed_video_button+'<a href="{{ url("/channel/delete_video/") }}/'+channel_id+'/'+video_id+'" type="button" class="btn btn-sm btn-warning btn-icon waves-effect waves-light ml-2" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete"><i class="la la-trash"></i></a></td></tr>';
+                    video_rows += '<tr draggable="true" ondragstart="start()" ondragover="dragover()"><td style="width: 17%;"><div><ul style="list-style: none;padding-left: 0px;float: left;"><li><span class="fa fa-angle-up" style="float:left;"></span></li><li><span class="fa fa-angle-down" style="float:left;"></span></li></ul></div><video width="50" height="30" style="float:right;border: 0.5px solid lightgray;"><source src="'+video_url+'" type="video/mp4"></video></td><td><span class="videosOrder">'+video_decimal_count+'. </span> <input type="hidden" class="videosOrderInput" value="'+video_id+'" /> '+data[i].name+'</td><td>'+embed_video_button+'<a href="{{ url("/channel/delete_video/") }}/'+channel_id+'/'+video_id+'" type="button" class="btn btn-sm btn-primary ml-2"><i class="la la-trash"></i></a></td></tr>';
                     if(i == 0)
                     {
                         $("#EmbedVideoSource").val(video_url);

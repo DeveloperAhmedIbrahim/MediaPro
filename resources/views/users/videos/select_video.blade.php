@@ -73,7 +73,7 @@
         }
         .loader {
             border: 10px solid #f3f3f3;
-            border-radius: 50%;
+            border-radius: 50% !important;
             border-top: 10px solid #3498db;
             width: 150px;
             height: 150px;
