@@ -34,16 +34,16 @@
                                     </div>
                                  </div>
                                  <div class="col-xl-6">
-                                
+
                                     <div class="gen-movie-info">
                                        <h3>Create an online TV channel for your brand.</h3>
                                     </div>
                                     <div class="gen-movie-meta-holder">
-                                   
+
                                        <p>Meet MediaPro, the easiest and the most affordable online video platform for creating and streaming your own live, linear and on-demand web TV channels.
                                        </p>
                                        <div class="gen-meta-info">
-                                      
+
                                        </div>
                                     </div>
                                     <div class="gen-movie-action">
@@ -58,8 +58,8 @@
                            </div>
                         </div>
                      </div>
-               
-                     
+
+
                   </div>
                </div>
             </div>
@@ -107,9 +107,9 @@
 
                </h3>
             </div>
-   
+
          </div>
-        
+
       </div>
    </section>
    <!-- How to create Section-1 End -->
@@ -128,7 +128,7 @@
    </div>
    </div>
    </div>
-   
+
    </div>
    </div>
       <div class="spb_content_element col-sm-4 spb_text_column">
@@ -155,11 +155,11 @@
       <div class="sf-icon-box-content">
       Embed the TV channel on your website. Alternatively, create an M3U8 media link and stream your content to a third-party player, mobile app or OTT platform.
       <a class="smooth-scroll-link readmore" href="#readmore3">Read More</a>
-   
+
    </div>
    </div>
    </div>
-   
+
    </div>
    </div>
    </div>
@@ -177,7 +177,7 @@
          </div>
 
       </div>
-     
+
    </div>
    <div class="container pt-5">
       <div class="row">
@@ -214,7 +214,7 @@
             <div class="col-md-6">
                <img src="{{asset('frontent_assets/images/scheduler-mini.png')}}" alt="" srcset="">
             </div>
-           
+
          </div>
       </div>
    </section>
@@ -235,18 +235,18 @@
  <p>You will get a unique URL for each video to share driving more traffic to your site and helping your visitors spend more time with your brand.
 </p>
             </div>
-        
-           
+
+
          </div>
       </div>
    </section>
     <!-- owl-carousel Videos Section-1 End -->
-    
+
  <!-- owl-carousel Videos Section-1 Start -->
  <section class="gen-section-padding-2">
    <div class="container pt-5">
       <div class="row">
-       
+
          <div class="col-md-6">
             <h3>Collect all your content in one place
             </h3>
@@ -257,7 +257,7 @@
          <div class="col-md-6">
             <img src="{{asset('frontent_assets/images/content-compressor.jpg')}}" alt="" srcset="">
          </div>
-        
+
       </div>
    </div>
 </section>
@@ -280,8 +280,8 @@
 
 </p>
          </div>
-        
-        
+
+
       </div>
    </div>
 </section>
@@ -360,11 +360,11 @@
                                            <li class="gen-post-author"><i class="fa fa-user"></i>admin</li>
                                            <li class="gen-post-meta"><a href="blog-single.html"><i class="fa fa-calendar"></i>January 25, 2021</a>
                                            </li>
-     
+
                                        </ul>
                                    </div>
                                    <h6 class="gen-blog-title"><a href="blog-single.html">What is Live Linear TV Streaming and How to Create a Linear Channel</a></h6>
-                                  
+
                                    <div class="gen-btn-container">
                                        <a href="blog-single.html" class="gen-button">
                                            <div class="gen-button-block">
@@ -402,11 +402,11 @@
                            </div>
                        </div>
                        <div class="col-lg-4">
-                    
+
                        </div>
-                      
+
                    </div>
-             
+
                </div>
            </div>
          </div>

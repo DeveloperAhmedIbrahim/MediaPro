@@ -28,6 +28,7 @@
             height: 100%;
             background-color: rgba(217,193,255,0.5);
             position: absolute;
+            z-index: 1;
         }
         /* Style the tab */
         .tab {
@@ -66,6 +67,68 @@
         .tabcontent {
             display: none;
         }
+
+        .specificVideo{
+            cursor: all-scroll;
+            position:relative;
+        }
+
+        .specificVideo a{
+            position:absolute;
+            top:0;
+            rigth:0;
+            cursor: pointer;
+            font-weight: bolder;
+            color: #FD3F35 !important;
+            padding-left: 4px;
+        }
+
+        .specificVideo a:hover{
+            color: #CA4E5D !important;
+        }
+
+        .specificVideoTime{
+            position: absolute !important;
+            left: 0;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 0px 5px;
+            font-size: 12px;
+        }
+
+        table tbody tr td{
+            width: 100px !important;
+            height: 100px !important;
+            padding-bottom:50px !important;
+        }
+
+        label
+        {
+            color: lightslategray;
+        }
+
+        .modal .modal-body .start
+        {
+            text-align: center;
+            background: #ED5A6E;
+            padding: 5px 0px;
+            color: white;
+        }
+
+        .modal .modal-body .end
+        {
+            text-align: center;
+            background: #ED5A6E;
+            padding: 5px 0px;
+            color: white;
+        }
+
+        .disabledSelect{
+            pointer-events: none;
+            background-color: lightgray;
+            -webkit-appearance: none;
+        }
+
     </style>
     <div class="content container-fluid">
         <div class="page-header mt-5">
@@ -110,7 +173,7 @@
                                 <tbody id="scheduleRow">
                                     <tr>
                                         <?php for ($i = 0; $i < 24; $i++) { ?>
-                                            <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" style="width: 100px; height: 100px;"></td>
+                                            <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" ></td>
                                         <?php } ?>
                                     </tr>
                                 </tbody>
@@ -130,7 +193,7 @@
                                     <tbody id="scheduleRow">
                                         <tr>
                                             <?php for ($i = 0; $i < 24; $i++) { ?>
-                                                <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" style="width: 100px; height: 100px;"></td>
+                                                <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" ></td>
                                             <?php } ?>
                                         </tr>
                                     </tbody>
@@ -148,7 +211,7 @@
                                     <tbody id="scheduleRow">
                                         <tr>
                                             <?php for ($i = 0; $i < 24; $i++) { ?>
-                                                <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" style="width: 100px; height: 100px;"></td>
+                                                <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" ></td>
                                             <?php } ?>
                                         </tr>
                                     </tbody>
@@ -166,7 +229,7 @@
                                     <tbody id="scheduleRow">
                                         <tr>
                                             <?php for ($i = 0; $i < 24; $i++) { ?>
-                                                <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" style="width: 100px; height: 100px;"></td>
+                                                <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" ></td>
                                             <?php } ?>
                                         </tr>
                                     </tbody>
@@ -184,7 +247,7 @@
                                     <tbody id="scheduleRow">
                                         <tr>
                                             <?php for ($i = 0; $i < 24; $i++) { ?>
-                                                <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" style="width: 100px; height: 100px;"></td>
+                                                <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" ></td>
                                             <?php } ?>
                                         </tr>
                                     </tbody>
@@ -202,7 +265,7 @@
                                     <tbody id="scheduleRow">
                                         <tr>
                                             <?php for ($i = 0; $i < 24; $i++) { ?>
-                                                <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" style="width: 100px; height: 100px;"></td>
+                                                <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" ></td>
                                             <?php } ?>
                                         </tr>
                                     </tbody>
@@ -220,7 +283,7 @@
                                     <tbody id="scheduleRow">
                                         <tr>
                                             <?php for ($i = 0; $i < 24; $i++) { ?>
-                                                <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" style="width: 100px; height: 100px;"></td>
+                                                <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" ></td>
                                             <?php } ?>
                                         </tr>
                                     </tbody>
@@ -238,7 +301,7 @@
                                     <tbody id="scheduleRow">
                                         <tr>
                                             <?php for ($i = 0; $i < 24; $i++) { ?>
-                                                <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" style="width: 100px; height: 100px;"></td>
+                                                <td class="drop" ondrop="drop(event,'{{ $i }}')" ondragover="allowDrop(event)" ></td>
                                             <?php } ?>
                                         </tr>
                                     </tbody>
@@ -256,7 +319,7 @@
                         @php
                             $videoCount++;
                         @endphp
-                        <div id="video_<?= $videoCount ?>" draggable="true" ondragstart="drag(event)" style="cursor: all-scroll;position:relative;">
+                        <div id="video_<?= $videoCount ?>" class="specificVideo" draggable="true" ondragstart="drag(event)" style="cursor: all-scroll;position:relative;">
                             <input class="videoId" value="<?= $video[$i]->id ?>" type="hidden">
                             <input class="scheduleRowId" value="" type="hidden">
                             <video width="100" height="70" style="border: 0.5px solid lightgray;">
@@ -290,36 +353,65 @@
                 </div>
                 <div class="modal-body">
                     <form action="{{ url('ajaxScheduleVideo') }}" method="post">
-                    <input type="hidden" value="" name="selectedSchedulerId" id="selectedSchedulerId">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="">hour</label>
-                            <select class="form-control" name="scheduleHours" id="scheduleHours" style="pointer-events: none">
-                                <option value="1" selected>1</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="">minutes</label>
-                            <select class="form-control" name="scheduleMinutes" id="scheduleMinutes" >
-                                @php
-                                    $minutes = 0;
-                                    for ($i = 0; $i < 60; $i++)
-                                    {
-                                        if($i < 10)
+                        <input type="hidden" value="" name="selectedSchedulerId" id="selectedSchedulerId">
+                        <label for="Start" class="container start">Start</label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="">hour</label>
+                                <select class="form-control disabledSelect" name="scheduleHours" id="scheduleHours">
+                                    <option value="1" selected>1</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="">minutes</label>
+                                <select class="form-control" name="scheduleMinutes" id="scheduleMinutes" onchange="previewCustomSchedule()">
+                                    @php
+                                        $minutes = 0;
+                                        for ($i = 0; $i < 60; $i++)
                                         {
-                                            $minutes = "0".$i;
+                                            if($i < 10)
+                                            {
+                                                $minutes = "0".$i;
+                                            }
+                                            else
+                                            {
+                                                $minutes = $i;
+                                            }
+                                            echo '<option value="'.$minutes.'">'.$minutes.'</option>';
                                         }
-                                        else
-                                        {
-                                            $minutes = $i;
-                                        }
-                                        echo '<option value="'.$minutes.'">'.$minutes.'</option>';
-                                    }
-                                @endphp
+                                    @endphp
 
-                            </select>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="">seconds</label>
+                                <select class="form-control disabledSelect" name="scheduleSeconds" id="scheduleSeconds">
+                                    <option value="1" selected>1</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                        <br>
+                        <label for="End" class="container end">End</label>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="">hour</label>
+                                <select class="form-control disabledSelect" name="endHours" id="endHours">
+                                    <option value="1" selected>1</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="">minutes</label>
+                                <select class="form-control disabledSelect" name="endMinutes" id="endMinutes">
+                                    <option value="1" selected>1</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="">seconds</label>
+                                <select class="form-control disabledSelect" name="endSeconds" id="endSeconds">
+                                    <option value="1" selected>1</option>
+                                </select>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -371,30 +463,35 @@
 
         function drop(ev,i)
         {
-            $(".loader").attr("hidden",false);
-            ev.preventDefault();
-            var hour =  parseInt(i) < 10 ? "0" + i : i;
-            var data = ev.dataTransfer.getData("text/html");
-            var videoId = $("#"+data+" .videoId").val();
-            ev.target.appendChild(document.getElementById(data));
-            $("#"+data).append('<a  style="position:absolute;top:0;rigth:0;cursor: pointer; font-weight: bolder; color: red; padding-left: 4px;" onclick="removeVideo(\''+data+'\')">✕</a>');
-            // $("#realVideosHtml").html(videoHtml());
-            $("#scheduleHours").html("<option value='"+hour+"' selected>"+hour+"</option>");
-            $("#scheduleMinutes").val("00").change();
-            selectedSchedulerId = $("#"+data+" .scheduleRowId").val();
-            ajaxScheduleVideo(videoId,hour,selectedSchedulerId);
+            var checkTargetClass = ev.target.className;
+            if(checkTargetClass == "drop")
+            {
+                $(".loader").attr("hidden",false);
+                ev.preventDefault();
+                var hour =  parseInt(i) < 10 ? "0" + i : i;
+                var data = ev.dataTransfer.getData("text/html");
+                var videoId = $("#"+data+" .videoId").val();
+                ev.target.appendChild(document.getElementById(data));
+                $("#"+data).append('<a onclick="removeVideo(\''+data+'\')">✕</a>');
+                $("#"+data).attr("title","Double click to change time.");
+                $("#scheduleHours").html("<option value='"+hour+"' selected>"+hour+"</option>");
+                $("#scheduleMinutes").val("00").change();
+                selectedSchedulerId = $("#"+data+" .scheduleRowId").val();
+                ajaxScheduleVideo(videoId,hour,selectedSchedulerId);
 
-            setTimeout(function(){
-                if(lastInsertedId != 1)
-                {
-                    $("#"+data+" .scheduleRowId").val(lastInsertedId);
-                    $("#selectedSchedulerId").val(lastInsertedId);
-                    $("#"+data).attr("ondblclick","openScheduleModalOnDblClick('"+lastInsertedId+"')")
-                }
-                setScheduleRow();
-                getScheduleRow();
-                $("#modalTiming").modal("show");
-            },1500);
+                setTimeout(function(){
+                    if(lastInsertedId != 1)
+                    {
+                        $("#"+data+" .scheduleRowId").val(lastInsertedId);
+                        $("#selectedSchedulerId").val(lastInsertedId);
+                        $("#"+data).attr("ondblclick","openScheduleModalOnDblClick('"+lastInsertedId+"')");
+                        $("#"+data).append('<span class="specificVideoTime" id="specificVideoTime_'+lastInsertedId+'">'+hour+':00:00</span>');
+                    }
+                    setScheduleRow();
+                    getScheduleRow();
+                    $("#modalTiming").modal("show");
+                },1500);
+            }
         }
 
         function videoHtml() {
@@ -404,7 +501,7 @@
                 videoId = $("#videoId_" + i).val();
                 videoContainerCount = parseInt(videoContainerCount) + 1;
                 html += '<div id="video_' + videoContainerCount +
-                    '" draggable="true" ondragstart="drag(event)" style="cursor: all-scroll;position:relative;"><input class="videoId" value="'+videoId+'" type="hidden"><input class="scheduleRowId" value="" type="hidden"><video width="100" height="70" style="border: 0.5px solid lightgray;"> <source src="' +
+                    '" class="specificVideo" draggable="true" ondragstart="drag(event)" style=""><input class="videoId" value="'+videoId+'" type="hidden"><input class="scheduleRowId" value="" type="hidden"><video width="100" height="70" style="border: 0.5px solid lightgray;"> <source src="' +
                     videoUrl + '" type="video/mp4"> Your browser does not support the video tag. </video></div>';
             }
             return html;
@@ -503,10 +600,43 @@
                     selectedSchedulerId:selectedSchedulerId,
                     scheduleTime:scheduleTime,
                 },
-                success:function(response){
+                success:function(response)
+                {
                     console.log('video has been scheduled.');
+                    $("#specificVideoTime_"+selectedSchedulerId).html(scheduleTime);
+                    setScheduleRow();
                     $("#modalTiming").modal("hide");
                     $(".loader").attr("hidden",true);
+                }
+            });
+        }
+
+        function previewCustomSchedule()
+        {
+            // $(".loader").attr("hidden",false);
+            var selectedSchedulerId = $("#selectedSchedulerId").val();
+            var scheduleHours = $("#scheduleHours").val();
+            var scheduleMinutes = $("#scheduleMinutes").val();
+            var channelId = $("#channelId").val();
+            var scheduleTime = scheduleHours+":"+scheduleMinutes+":00";
+            jQuery.ajax({
+                url:"{{ url('previewCustomSchedule') }}",
+                method:"POST",
+                data:{
+                    _token:"{{ csrf_token() }}",
+                    channelId:channelId,
+                    selectedSchedulerId:selectedSchedulerId,
+                    scheduleTime:scheduleTime,
+                },
+                success:function(response)
+                {
+                    var endTime = response.split(":");
+                    var endHours = endTime[0];
+                    var endMinutes = endTime[1];
+                    var endSeconds = endTime[2];
+                    $("#endHours").html('<option value="'+endHours+'">'+endHours+'</option>');
+                    $("#endMinutes").html('<option value="'+endMinutes+'">'+endMinutes+'</option>');
+                    $("#endSeconds").html('<option value="'+endSeconds+'">'+endSeconds+'</option>');
                 }
             });
         }
@@ -523,52 +653,24 @@
                 },
                 success:function(response){
                     var scheduleTime = response[0]["schedule_time"];
+                    var endTime = response[0]["end_time"];
                     scheduleTime = scheduleTime.split(":");
-                    console.log(scheduleTime);
-                    var hours = scheduleTime[0];
-                    var minutes = scheduleTime[1];
-                    $("#scheduleHours").html('<option value="'+hours+'">'+hours+'</option>');
-                    $("#scheduleMinutes").val(minutes).change();
+                    endTime = endTime.split(":");
+                    var startHours = scheduleTime[0];
+                    var startMinutes = scheduleTime[1];
+                    var startSeconds = scheduleTime[2];
+                    var endHours = endTime[0];
+                    var endMinutes = endTime[1];
+                    var endSeconds = endTime[2];
+                    $("#scheduleHours").html('<option value="'+startHours+'">'+startHours+'</option>');
+                    $("#scheduleMinutes").val(startMinutes).change();
+                    $("#scheduleSeconds").html('<option value="'+startSeconds+'">'+startSeconds+'</option>');
+                    $("#endHours").html('<option value="'+endHours+'">'+endHours+'</option>');
+                    $("#endMinutes").html('<option value="'+endMinutes+'">'+endMinutes+'</option>');
+                    $("#endSeconds").html('<option value="'+endSeconds+'">'+endSeconds+'</option>');
                     $("#modalTiming").modal("show");
                 }
             });
-        }
-
-        function removeVideo(attribute)
-        {
-            $(".loader").attr("hidden",false);
-            var selectedSchedulerId = $("#"+attribute+" .scheduleRowId").val();
-            jQuery.ajax({
-                url:"{{ url('removeSpecificVideoScheduleTime') }}",
-                method:"POST",
-                data:{
-                    _token:"{{ csrf_token() }}",
-                    selectedSchedulerId:selectedSchedulerId,
-                },
-                success:function(response){
-                    $("#"+attribute).remove();
-                    setScheduleRow();
-                    getScheduleRow();
-                    // $(".loader").attr("hidden",true);
-                }
-            });
-        }
-
-        function openTab(evt, day) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++)
-            {
-                tabcontent[i].style.display = "none";
-            }
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++)
-            {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            document.getElementById(day).style.display = "block";
-            evt.currentTarget.className += " active";
-            $("#selectedTab").val(day);
         }
 
     </script>

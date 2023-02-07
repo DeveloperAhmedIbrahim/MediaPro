@@ -925,18 +925,40 @@ class UserController extends Controller
         if($request->post("selectedSchedulerId"))
         {
             $selectedSchedulerId = $request->post("selectedSchedulerId");
+            $videoId = DB::table('schedule_videos')->select(
+                'video_id'
+            )->where(
+                'id','=',$selectedSchedulerId
+            )->first()->video_id;
+            // $videoId = $videoId->video_id;
+            $duration = video::select(
+                'duration'
+            )->where(
+                'id','=',$videoId
+            )->first();
+            $endTime = strtotime($scheduleTime) + (int)$duration->duration;
+            $endTime = date('H:i:s',$endTime);
             $response = DB::table('schedule_videos')->where(
                 'id','=',$selectedSchedulerId,
             )->update([
                 'schedule_time' => $scheduleTime,
+                'end_time' => $endTime,
             ]);
             return $response;
         }
         else
         {
             $videoId = $request->post('videoId');
+            $duration = video::select(
+                'duration'
+            )->where(
+                'id','=',$videoId
+            )->first();
+            $endTime = strtotime($scheduleTime) + (int)$duration->duration;
+            $endTime = date('H:i:s',$endTime);
             $insertedId = DB::table('schedule_videos')->insertGetId([
                 'schedule_time' => $scheduleTime,
+                'end_time' => $endTime,
                 'video_id' => $videoId,
                 'channel_id' => $channelId,
                 'schedule_day' => $day,
@@ -945,6 +967,28 @@ class UserController extends Controller
             return $insertedId;
         }
     }
+
+
+    function previewCustomSchedule(Request $request)
+    {
+        $selectedSchedulerId = $request->post("selectedSchedulerId");
+        $scheduleTime = $request->post('scheduleTime');
+        $videoId = DB::table('schedule_videos')->select(
+            'video_id'
+        )->where(
+            'id','=',$selectedSchedulerId
+        )->first()->video_id;
+        // $videoId = $videoId->video_id;
+        $duration = video::select(
+            'duration'
+        )->where(
+            'id','=',$videoId
+        )->first();
+        $endTime = strtotime($scheduleTime) + (int)$duration->duration;
+        $endTime = date('H:i:s',$endTime);
+        return $endTime;
+    }
+
     function setScheduleRow(Request $request)
     {
         $channelId = $request->post('channelId');
