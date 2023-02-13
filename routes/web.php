@@ -107,6 +107,7 @@ Route::group(['middleware' => 'auth'], function ()
     Route::post('/getSpecificVideoScheduleTime',[App\Http\Controllers\UserController::class,'getSpecificVideoScheduleTime']);
     Route::post('/removeSpecificVideoScheduleTime',[App\Http\Controllers\UserController::class,'removeSpecificVideoScheduleTime']);
     Route::post('/previewCustomSchedule',[App\Http\Controllers\UserController::class,'previewCustomSchedule']);
+    Route::post('/getScheduledVideosOfSpesificChannel',[App\Http\Controllers\UserController::class,'getScheduledVideosOfSpesificChannel']);
 
     Route::resource('websites', WebsiteController::class);
     Route::get('/delete/website/{id}', [App\Http\Controllers\WebsiteController::class, 'destroy']);

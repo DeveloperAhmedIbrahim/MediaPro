@@ -57,6 +57,17 @@
                 }
                 else if(channel_type == "linear_schedule")
                 {
+                    if(data['channel'].scheduledDuration == 1)
+                    {
+                        $("#scheduleDays").prop("hidden",true);
+                    }
+                    else
+                    {
+                        $("#scheduleDays").prop("hidden",false);
+                    }
+
+                    getScheduledVideosOfSpesificChannel(id,"all");
+
                     $("#AddVideoButton").hide();
                     $("#ScheduleVideoButton").show();
                     $("#ScheduleVideoButton").prop("href","{{ url('/scheduleVideo') }}/"+channel_id);
@@ -68,19 +79,18 @@
                 {
                     $("#chk_video_id_avl_"+i).prop("checked",false)
                 }
-                for(var i = 0; i < data.length; i++)
+                for(var i = 0; i < data['videos'].length; i++)
                 {
                     video_decimal_count = i+1;
-                    video_id = parseInt(data[i].id);
-                    console.log(data[i]);
-                    if(parseInt(data[i].is_mtu8) == 1)
+                    video_id = parseInt(data['videos'][i].id);
+                    if(parseInt(data['videos'][i].is_mtu8) == 1)
                     {
-                        video_url = data[i].image_url;
+                        video_url = data['videos'][i].image_url;
                     }
                     else
                     {
 
-                        video_url = "{{ url('uploads/') }}" + "/" + data[i].image_url;
+                        video_url = "{{ url('uploads/') }}" + "/" + data['videos'][i].image_url;
                     }
                     if(channel_type == "ondemand")
                     {
@@ -90,7 +100,7 @@
                     {
                         embed_video_button = "";
                     }
-                    video_rows += '<tr draggable="true" ondragstart="start()" ondragover="dragover()"><td style="width: 17%;"><div><ul style="list-style: none;padding-left: 0px;float: left;"><li><span class="fa fa-angle-up" style="float:left;"></span></li><li><span class="fa fa-angle-down" style="float:left;"></span></li></ul></div><video width="50" height="30" style="float:right;border: 0.5px solid lightgray;"><source src="'+video_url+'" type="video/mp4"></video></td><td><span class="videosOrder">'+video_decimal_count+'. </span> <input type="hidden" class="videosOrderInput" value="'+video_id+'" /> '+data[i].name+'</td><td>'+embed_video_button+'<a href="{{ url("/channel/delete_video/") }}/'+channel_id+'/'+video_id+'" type="button" class="btn btn-sm btn-primary ml-2"><i class="la la-trash"></i></a></td></tr>';
+                    video_rows += '<tr draggable="true" ondragstart="start()" ondragover="dragover()"><td style="width: 17%;"><div><ul style="list-style: none;padding-left: 0px;float: left;"><li><span class="fa fa-angle-up" style="float:left;"></span></li><li><span class="fa fa-angle-down" style="float:left;"></span></li></ul></div><video width="50" height="30" style="float:right;border: 0.5px solid lightgray;"><source src="'+video_url+'" type="video/mp4"></video></td><td><span class="videosOrder">'+video_decimal_count+'. </span> <input type="hidden" class="videosOrderInput" value="'+video_id+'" /> '+data['videos'][i].name+'</td><td>'+embed_video_button+'<a href="{{ url("/channel/delete_video/") }}/'+channel_id+'/'+video_id+'" type="button" class="btn btn-sm btn-primary ml-2"><i class="la la-trash"></i></a></td></tr>';
                     if(i == 0)
                     {
                         $("#EmbedVideoSource").val(video_url);
@@ -100,6 +110,23 @@
             }
         });
 
+    }
+
+    function getScheduledVideosOfSpesificChannel(channelId,day)
+    {
+        jQuery.ajax({
+            url:"getScheduledVideosOfSpesificChannel",
+            method:"POST",
+            data:{
+                _token:"{{ csrf_token() }}",
+                channelId:channelId,
+                day:day
+            },
+            success:function(response)
+            {
+                console.log(response);
+            }
+        });
     }
 
     function myFunction() {

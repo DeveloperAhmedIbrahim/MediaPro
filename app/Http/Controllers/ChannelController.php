@@ -44,6 +44,7 @@ class ChannelController extends Controller
     public function channel_select_detail(Request $req)
     {
         $get = Channel::find($req->id);
+        $data['channel'] = $get;
         $videos_array = array();
         if($get->videos == null)
         {
@@ -60,7 +61,8 @@ class ChannelController extends Controller
                 $videos_array[] = $array[0];
             }
         }
-        return $videos_array;
+        $data['videos'] = $videos_array;
+        return $data;
     }
 
     public function add_video(Request $request)

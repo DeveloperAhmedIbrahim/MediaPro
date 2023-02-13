@@ -989,6 +989,16 @@ class UserController extends Controller
         return $endTime;
     }
 
+    function getScheduledVideosOfSpesificChannel(Request $request)
+    {
+        $channelId = $request->post("channelId");
+        $scheduledVideos = DB::table("schedule_videos")->where(
+            "channel_id","=",$channelId
+        )->get();
+        $scheduledVideos = count($scheduledVideos) == 0 ? 0 : $scheduledVideos;
+        return $scheduledVideos;
+    }
+
     function setScheduleRow(Request $request)
     {
         $channelId = $request->post('channelId');
