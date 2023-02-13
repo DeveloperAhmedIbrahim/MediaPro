@@ -71,12 +71,14 @@ if (isset($_GET["loop_channel"]) && $_GET["loop_channel"] == 1)
 }
 if($videoUrl != null && $videoUrl != "")
 {
+    $videoUrl = url('uploads/') . '/' . $videoUrl;
     $videoUrlArray = explode("/",$videoUrl);
     if(count($videoUrlArray) > 0)
     {
         $videoUrlCleaned =  end($videoUrlArray);
     }
 }
+
 
 $videoUrlExtension = pathinfo($videoUrl, PATHINFO_EXTENSION);
 if($videoUrlExtension == "m3u8")
