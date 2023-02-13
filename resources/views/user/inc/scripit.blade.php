@@ -27,6 +27,7 @@
     function GetChannelVideos(id,channel_name,channel_type)
     {
         var channel_id = id;
+        var day = "all";
         $("#channelId").val(channel_id);
         $('#AddVideoButton').removeAttr('onclick');
         $('#AddVideoButton').attr('onclick', 'OpenVideosModel('+id+');');
@@ -66,7 +67,13 @@
                         $("#scheduleDays").prop("hidden",false);
                     }
 
-                    getScheduledVideosOfSpesificChannel(id,"all");
+                    if(data['channel'].scheduledDuration == 0)
+                    {
+                        $("#scheduleDays").val("Monday").change();
+                        day = $("#scheduleDays").val();
+                    }
+
+                    getScheduledVideosOfSpecificChannel(id,day);
 
                     $("#AddVideoButton").hide();
                     $("#ScheduleVideoButton").show();
@@ -112,10 +119,10 @@
 
     }
 
-    function getScheduledVideosOfSpesificChannel(channelId,day)
+    function getScheduledVideosOfSpecificChannel(channelId,day)
     {
         jQuery.ajax({
-            url:"getScheduledVideosOfSpesificChannel",
+            url:"getScheduledVideosOfSpecificChannel",
             method:"POST",
             data:{
                 _token:"{{ csrf_token() }}",
@@ -124,7 +131,20 @@
             },
             success:function(response)
             {
-                console.log(response);
+                var videosHtml = '';
+                if(response != 0)
+                {
+                    for(var i = 0; i < response.length; i++)
+                    {
+                        count = i+1;
+                        var videoUrl = '{{ url("uploads/") }}/' + response[i]['video_url'];
+                        videosHtml += '<tr>';
+                        videosHtml += '<td style="width: 17%;"><div><ul style="list-style: none;padding-left: 0px;float: left;"><li><span class="fa fa-angle-up" style="float:left;"></span></li><li><span class="fa fa-angle-down" style="float:left;"></span></li></ul></div><video width="50" height="30" style="float:right;border: 0.5px solid lightgray;"><source src="'+videoUrl+'" type="video/mp4"></video></td>';
+                        videosHtml += '<td><span class="videosOrder">'+count+'. ' + response[i]['video_title'] + ' </span> <div style="color:#ff9b44;"> ' + response[i]['schedule_time'] + ' - ' + response[i]['end_time'] + ' </div> </td>';
+                        videosHtml += '</tr>';
+                    }
+                }
+                $("#VideoListAccordingToChannel").html(videosHtml);
             }
         });
     }
@@ -894,6 +914,14 @@
         {
             window.open(logoLink, '_blank');
         }
+    });
+
+
+    $("#scheduleDays").change(function(){
+        var day = $("#scheduleDays").val();
+        var channelId = $("#channelId").val();
+        getScheduledVideosOfSpecificChannel(channelId,day);
+
     });
 
  </script>

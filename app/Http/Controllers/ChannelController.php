@@ -192,6 +192,11 @@ class ChannelController extends Controller
                 }
             }
         }
+        if($chanel->scheduledDuration != $request->schedule_duration)
+        {
+            DB::table('schedule_record')->where('scheduledChannelId','=',$channelId)->delete();
+            DB::table('schedule_videos')->where('channel_id','=',$channelId)->delete();
+        }
         $chanel->name = $request->name;
         $chanel->scheduledDuration = $request->schedule_duration;
         $chanel->anywhere = $request->anywhere;
@@ -208,7 +213,7 @@ class ChannelController extends Controller
         $chanel->twitterHandle = $twitterHandle;
         $chanel->timeZone = Auth::user()->timezone;
         $chanel->save();
-        return redirect('/chanel_list');
+        return redirect('/scheduleVideo/'.$chanel->id);
     }
     public function edit_linear_chanel(Request $req)
     {

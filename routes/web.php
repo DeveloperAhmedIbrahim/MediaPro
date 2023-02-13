@@ -100,6 +100,8 @@ Route::group(['middleware' => 'auth'], function ()
     Route::post('/search-videos_by_tag', [App\Http\Controllers\UserController::class, 'searchPosts_by_tag']);
     Route::post('/searchPosts-by-name', [App\Http\Controllers\UserController::class, 'searchPosts_by_name']);
     Route::post('/user/search_video', [App\Http\Controllers\UserController::class, 'search_video']);
+
+    // Schedule Videos
     Route::get('/scheduleVideo/{id?}',[App\Http\Controllers\UserController::class, 'scheduleVideo']);
     Route::post('/ajaxScheduleVideo',[App\Http\Controllers\UserController::class, 'ajaxScheduleVideo']);
     Route::post('/setScheduleRow',[App\Http\Controllers\UserController::class, 'setScheduleRow']);
@@ -107,10 +109,12 @@ Route::group(['middleware' => 'auth'], function ()
     Route::post('/getSpecificVideoScheduleTime',[App\Http\Controllers\UserController::class,'getSpecificVideoScheduleTime']);
     Route::post('/removeSpecificVideoScheduleTime',[App\Http\Controllers\UserController::class,'removeSpecificVideoScheduleTime']);
     Route::post('/previewCustomSchedule',[App\Http\Controllers\UserController::class,'previewCustomSchedule']);
-    Route::post('/getScheduledVideosOfSpesificChannel',[App\Http\Controllers\UserController::class,'getScheduledVideosOfSpesificChannel']);
+    Route::post('/getScheduledVideosOfSpecificChannel',[App\Http\Controllers\UserController::class,'getScheduledVideosOfSpecificChannel']);
 
+    // Website
     Route::resource('websites', WebsiteController::class);
     Route::get('/delete/website/{id}', [App\Http\Controllers\WebsiteController::class, 'destroy']);
 
+    // Analylicts
     Route::get('/Analytics',[App\Http\Controllers\AnalyticsController::class,'index']);
 });

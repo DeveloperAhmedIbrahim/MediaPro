@@ -989,14 +989,29 @@ class UserController extends Controller
         return $endTime;
     }
 
-    function getScheduledVideosOfSpesificChannel(Request $request)
+    function getScheduledVideosOfSpecificChannel(Request $request)
     {
         $channelId = $request->post("channelId");
-        $scheduledVideos = DB::table("schedule_videos")->where(
-            "channel_id","=",$channelId
-        )->get();
-        $scheduledVideos = count($scheduledVideos) == 0 ? 0 : $scheduledVideos;
-        return $scheduledVideos;
+        $day = $request->post("day");
+        $scheduledVideos = DB::table("schedule_videos")->where([
+            ["channel_id","=",$channelId],
+            ["schedule_day","=",$day]
+        ])->get();
+        if(count($scheduledVideos) > 0)
+        {
+            for ($i = 0; $i < count($scheduledVideos); $i++)
+            {
+                $videos[$i]['video_title'] = video::find($scheduledVideos[$i]->video_id)->name;
+                $videos[$i]['video_url'] = video::find($scheduledVideos[$i]->video_id)->image_url;
+                $videos[$i]['schedule_time'] = $scheduledVideos[$i]->schedule_time;
+                $videos[$i]['end_time'] = $scheduledVideos[$i]->end_time;
+            }
+        }
+        else
+        {
+            $videos = 0;
+        }
+        return $videos;
     }
 
     function setScheduleRow(Request $request)
