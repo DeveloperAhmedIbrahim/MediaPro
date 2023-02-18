@@ -168,7 +168,7 @@
                             if ($video->is_mtu8 == 1) {
                                 $videoUrl = $video->image_url;
                             } else {
-                                $videoUrl = url('uploads/' . $video->image_url);
+                                $videoUrl = $video->image_url;
                             }
                         @endphp
                         <iframe

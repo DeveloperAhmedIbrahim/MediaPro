@@ -319,7 +319,7 @@
                                             <img src="" id="previewWatermarkInVideo" alt="">
                                         @endif
                                         <iframe
-                                            src="{{ url('/') }}/embed?url={{ url('/uploads/videoSampleOne.mp4') }}&autoplay=0&volume=1&controls=1&title=1&share=1&open_playlist=0&disabled=0"
+                                            src="{{ url('/') }}/embed?url=videoSampleOne.mp4&autoplay=0&volume=1&controls=1&title=1&share=1&open_playlist=0&disabled=0"
                                             width="600"
                                             height="340"
                                             title="MediaPro Video"

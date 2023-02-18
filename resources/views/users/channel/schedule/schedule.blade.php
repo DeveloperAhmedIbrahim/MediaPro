@@ -691,5 +691,25 @@
             });
         }
 
+
+        function removeVideo(attribute)
+        {
+            $(".loader").attr("hidden",false);
+            var selectedSchedulerId = $("#"+attribute+" .scheduleRowId").val();
+            jQuery.ajax({
+                url:"{{ url('/removeSpecificVideoScheduleTime') }}",
+                method:"POST",
+                data:{
+                    _token:"{{ csrf_token() }}",
+                    selectedSchedulerId:selectedSchedulerId,
+                },
+                success:function(response){
+                    $("#"+attribute).remove();
+                    setScheduleRow();
+                    getScheduleRow();
+                    // $(".loader").attr("hidden",true);
+                }
+            });
+        }
     </script>
 @endsection

@@ -27,18 +27,25 @@ Route::get('/affiliate',[App\Http\Controllers\FrontController::class,'affiliates
 Route::get('/privacy-policy',[App\Http\Controllers\FrontController::class,'privacy_policy']);
 Route::get('/Terms&condition',[App\Http\Controllers\FrontController::class,'termscondition']);
 Route::get('/test_email',[App\Http\Controllers\FrontController::class,'test_email']);
+
+// Authtications
 Route::get('activate_user/{id}',[App\Http\Controllers\AdminController::class,'activate_user']);
-Route::get('/embed/{id?}',[App\Http\Controllers\UserController::class, 'embed']);
-Route::post('/setVideoTiming',[App\Http\Controllers\TestCronJobController::class,'setVideoTiming']);
-Route::post('/getCurrentVideoAndTime',[App\Http\Controllers\UserController::class,'getCurrentVideoAndTime']);
 Route::post('/signInGoogle',[App\Http\Controllers\AdminController::class, 'signInGoogle']);
 Route::get('/passwordForgot',[App\Http\Controllers\AdminController::class, 'passwordForgot']);
 Route::post('/verifyEmailForFP',[App\Http\Controllers\AdminController::class, 'verifyEmailForFP']);
 Route::get('/passwordReset',[App\Http\Controllers\AdminController::class, 'passwordReset']);
 Route::post('/passwordChange',[App\Http\Controllers\AdminController::class, 'passwordChange']);
 Route::get('/testCronJob', [App\Http\Controllers\TestCronJobController::class, 'testCronJob']);
+
+// Embed & Schdule Handlings
+Route::get('/embed/{id?}',[App\Http\Controllers\UserController::class, 'embed']);
+Route::post('/setVideoTiming',[App\Http\Controllers\TestCronJobController::class,'setVideoTiming']);
+Route::post('/getCurrentVideoAndTime',[App\Http\Controllers\UserController::class,'getCurrentVideoAndTime']);
 Route::post('/loopChannelDynamicPlaylist', [App\Http\Controllers\UserController::class, 'loopChannelDynamicPlaylist']);
 Route::post('/setNextVideoAndTimeOnVideoEnded', [App\Http\Controllers\UserController::class, 'setNextVideoAndTimeOnVideoEnded']);
+Route::post('/checkScheduleVideo', [App\Http\Controllers\UserController::class, 'checkScheduleVideo']);
+
+
 
 Route::group(['middleware' => 'auth'], function ()
 {

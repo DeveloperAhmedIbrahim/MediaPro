@@ -96,8 +96,7 @@
                     }
                     else
                     {
-
-                        video_url = "{{ url('uploads/') }}" + "/" + data['videos'][i].image_url;
+                        video_url = data['videos'][i].image_url;
                     }
                     if(channel_type == "ondemand")
                     {

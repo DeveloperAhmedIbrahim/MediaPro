@@ -23,6 +23,7 @@ $allVideosNames = '';
 $playlist = 0;
 $open_playlist = 0;
 $loop_channel = 0;
+$schedule_channel = 0;
 $timeZone = "";
 
 if(isset($_GET["url"]))
@@ -111,6 +112,10 @@ if(isset($channelInfo->id))
     {
         $loop_channel = 1;
     }
+    else if($channelType == "linear_schedule")
+    {
+        $schedule_channel = 1;
+    }
     $logoVisiblity = $channelInfo->logoVisiblity;
     $logo = $channelInfo->logo == null ? '' : $channelInfo->logo;
     $logoLink = $channelInfo->logoLink == null ? '' : $channelInfo->logoLink;
@@ -164,7 +169,7 @@ if(isset($channelInfo->id))
         }
         .video-js .vjs-big-play-button .vjs-icon-placeholder:before {
             content: "";
-            background-image: url('http://localhost:8000/images/playbutton.png');
+            background-image: url('{{ url("/images/playbutton.png") }}');
             background-repeat: no-repeat;
             background-size: 46px;
             background-position: 50% calc(50% - 0px);
@@ -265,6 +270,20 @@ if(isset($channelInfo->id))
             border-radius: 0px;
             background:  #FD6E6A;
         }
+        .schedule-waiting-overlay{
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1;
+        }
+        .schedule-waiting-overlay .scheduled-time{
+            color: white;
+            position: absolute;
+            bottom: 10%;
+            right: 5%;
+            font-size: 30px;
+        }
     </style>
     <input type="hidden" id="volume" value="{{ $volume }}">
     <input type="hidden" id="autoplay" value="{{ $autoplay }}">
@@ -282,7 +301,11 @@ if(isset($channelInfo->id))
     <input type="hidden" id="playlist" value="{{ $playlist }}">
     <input type="hidden" id="open_playlist" value="{{ $open_playlist }}">
     <input type="hidden" id="loop_channel" value="{{ $loop_channel }}">
+    <input type="hidden" id="schedule_channel" value="{{ $schedule_channel }}">
     <input type="hidden" id="channelId" value="{{ $channelId }}">
+    <div class="schedule-waiting-overlay" hidden>
+        <div class="scheduled-time"></div>
+    </div>
     <div class="row playlistContainer">
         <i class="fa-solid fa-xmark btnPlaylistClose"></i>
         @php
@@ -396,6 +419,7 @@ if(isset($channelInfo->id))
         <i class="fa-brands fa-twitter twitterShare" style="font-weight: bolder;margin: 0px 10px;" id="btnOutTwitterShare"></i>
         <i class="fa-solid fa-share-nodes" style="font-weight: bolder;margin: 0px 10px;font-size: 20px;" id="btnOutMultiShare"></i>
     </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v15.0" nonce="EO5ZQw04"></script>
@@ -415,6 +439,8 @@ if(isset($channelInfo->id))
         var playlist = $("#playlist").val();
         var open_playlist = $("#open_playlist").val();
         var loop_channel = $("#loop_channel").val();
+        var schedule_channel = $("#schedule_channel").val();
+        var channelId = $("#channelId").val();
         var mutedValued = false;
         var autoplayValue = false;
         var controlsValue = false;
@@ -740,7 +766,7 @@ if(isset($channelInfo->id))
             $(".playlist").click();
         }
 
-        if(loop_channel == 1)
+        if(loop_channel == 1 || schedule_channel == 1)
         {
             $(".vjs-progress-holder").css("display","none");
             $(".vjs-remaining-time").css("display","none");
@@ -841,6 +867,151 @@ if(isset($channelInfo->id))
                 }
             });
         }
+
+        if(schedule_channel == 1)
+        {
+            videoAnotherObj.onplay = function() {
+                $(".vjs-big-play-button").css("display","none");
+                if(controls == 0)
+                {
+                    videoObject.controls(0);
+                    $("#btnSharesOnControlHide").show();
+                }
+                else
+                {
+                    videoObject.controls(1);
+                }
+            };
+            videoAnotherObj.onpause = function() {
+                $(".vjs-big-play-button").css("display","block");
+                titleName = "";
+                videoObject.controls(0);
+                $("#btnSharesOnControlHide").hide();
+                checkScheduleVideo("onpause");
+            };
+            checkScheduleVideo("onload");
+            $(".vjs-big-play-button").click(function(){
+                $(".vjs-big-play-button").css("display","none");
+                checkScheduleVideo("onplay");
+            });
+        }
+
+        function checkScheduleVideo(source)
+        {
+            jQuery.ajax({
+                url:"{{ url('checkScheduleVideo/') }}",
+                method:"POST",
+                data:{
+                    _token:"{{ csrf_token() }}",
+                    channelId:channelId
+                },
+                success:function(response){
+                    var status = response['status'];
+                    videoType = "video/mp4";
+                    url = response['videoUrl'];
+                    if(status == 2 || status == 0)
+                    {
+                        $(".schedule-waiting-overlay").prop("hidden",false);
+                        var comingSoon = response['commingSoonTime'];
+                        var isVideoRunning = 0;
+                        titleName = response['videoTitle'];
+                        videoType = "video/mp4";
+                        url = response['videoUrl'];
+                        videoObject.src({"type":videoType, "src":url});
+                        setInterval(function(){
+                            if(comingSoon != "00:00:00")
+                            {
+                                $(".scheduled-time").html("Next Coming In " + countdown(comingSoon));
+                                comingSoon = countdown(comingSoon);
+                            }
+                            else
+                            {
+                                if(isVideoRunning == 0)
+                                {
+                                    $(".schedule-waiting-overlay").prop("hidden",true);
+                                    isVideoRunning = 1;
+                                }
+                            }
+                        },1000);
+                    }
+                    else if(status == 1)
+                    {
+                        $(".schedule-waiting-overlay").prop("hidden",true);
+                        $(".scheduled-time").html("");
+                        if(source == "onplay")
+                        {
+                            var timePassed = response["timePassed"];
+                            var videoTitle = response["videoTitle"];
+                            var videoUrl = response["videoUrl"];
+                            timePassed = toSeconds(timePassed);
+                            titleName = videoTitle
+                            videoType = "video/mp4";
+                            url = videoUrl;
+                            videoObject.src({"type":videoType, "src":url});
+                            console.log(timePassed);
+                            setTimeout(function(){
+                                videoObject.play();
+                                videoAnotherObj.currentTime = timePassed;
+                            }, 500);
+                            isVideoRunning = 1;
+                        }
+                        else if(source == "onload")
+                        {
+                            videoObject.src({"type":videoType, "src":url});
+                        }
+                    }
+                }
+            });
+        }
+
+
+        function countdown(comingSoon)
+        {
+            var arrayComingSoon = comingSoon.split(":");
+            var hours = arrayComingSoon[0];
+            var minutes = arrayComingSoon[1];
+            var seconds = arrayComingSoon[2];
+            var newhours = 0;
+            var newminutes = 0;
+            var newseconds = 0;
+
+            if(parseInt(seconds) > 0)
+            {
+                newseconds = parseInt(seconds) - 1;
+                newseconds = newseconds < 10 ? "0" + newseconds : newseconds;
+                comingSoon = hours + ":" + minutes + ":" + newseconds;
+            }
+            else if(parseInt(minutes) > 0)
+            {
+                seconds = 59;
+                newminutes = parseInt(minutes) - 1;
+                newminutes = newminutes < 10 ? "0" + newminutes : newminutes;
+                comingSoon = hours + ":" + newminutes + ":" + seconds;
+            }
+            else if(parseInt(hours) > 0)
+            {
+                seconds = 59;
+                minutes = 59;
+                newhours = parseInt(hours) - 1;
+                newhours = newhours < 10 ? "0" + newhours : newhours;
+                comingSoon = newhours + ":" + minutes + ":" + seconds;
+            }
+
+            return comingSoon;
+        }
+
+        function toSeconds(time)
+        {
+            var timeArray = time.split(":");
+            var hours = parseInt(timeArray[0]);
+            var minutes = parseInt(timeArray[1]);
+            var seconds = parseInt(timeArray[2]);
+            var hoursToSeconds = hours * 3600;
+            var minutesToSeconds = minutes * 60;
+            var totalSeconds = hoursToSeconds + minutesToSeconds + seconds;
+            return totalSeconds;
+        }
+
     </script>
 </body>
 </html>
