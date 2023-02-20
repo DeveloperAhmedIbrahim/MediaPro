@@ -931,7 +931,7 @@ class UserController extends Controller
         $scheduledVideos = DB::table('schedule_videos')->where([
             ['channel_id', '=', $channelId],
             ['schedule_day', '=', $day],
-        ])->get();
+        ])->orderBy('id', 'DESC')->get();
         // set timezone
         date_default_timezone_set($timeZone);
         // get current date & time
@@ -1009,7 +1009,7 @@ class UserController extends Controller
                 DB::raw("SELECT * FROM `schedule_videos`
                     WHERE `schedule_day` = '$day'
                     AND `channel_id` = '$channelId'
-                    AND `schedule_time` = (SELECT MIN(`schedule_time`) FROM `schedule_videos`)"
+                    AND `schedule_time` = (SELECT MIN(`schedule_time`) FROM `schedule_videos` WHERE `channel_id` = '$channelId')"
                 )
             );
             $videoId = $videoFirst[0]->video_id;

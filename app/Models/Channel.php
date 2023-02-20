@@ -16,16 +16,12 @@ class Channel extends Model
         'videos',
         'time',
         'ChanelType',
-         'anywhere',
-         'choose_domain',
+        'anywhere',
+        'choose_domain',
         'adtagurl',
         'controllogo',
         'logo',
         'positionleft',
         'positionright',
-        ];
-        // public function videos()
-        // {
-        //     return $this->belongsTo(videos::class,'videos');
-        // }
+    ];
 }

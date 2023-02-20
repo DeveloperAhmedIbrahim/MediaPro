@@ -478,14 +478,13 @@
                 $("#scheduleMinutes").val("00").change();
                 selectedSchedulerId = $("#"+data+" .scheduleRowId").val();
                 ajaxScheduleVideo(videoId,hour,selectedSchedulerId);
-
+                $("#"+data).append('<span class="specificVideoTime" id="specificVideoTime_'+lastInsertedId+'">'+hour+':00:00</span>');
                 setTimeout(function(){
                     if(lastInsertedId != 1)
                     {
                         $("#"+data+" .scheduleRowId").val(lastInsertedId);
                         $("#selectedSchedulerId").val(lastInsertedId);
                         $("#"+data).attr("ondblclick","openScheduleModalOnDblClick('"+lastInsertedId+"')");
-                        $("#"+data).append('<span class="specificVideoTime" id="specificVideoTime_'+lastInsertedId+'">'+hour+':00:00</span>');
                     }
                     setScheduleRow();
                     getScheduleRow();
@@ -533,6 +532,7 @@
         {
             var channelId = $("#channelId").val();
             var scheduleRowHTML = $("#scheduleHTML").html();
+            console.log(scheduleRowHTML);
             var videoSerialFirstCount = videoContainerCount;
             jQuery.ajax({
                 url:"{{ url('setScheduleRow') }}",
@@ -613,7 +613,6 @@
 
         function previewCustomSchedule()
         {
-            // $(".loader").attr("hidden",false);
             var selectedSchedulerId = $("#selectedSchedulerId").val();
             var scheduleHours = $("#scheduleHours").val();
             var scheduleMinutes = $("#scheduleMinutes").val();
@@ -661,6 +660,7 @@
 
         function openScheduleModalOnDblClick(selectedSchedulerId)
         {
+            $(".loader").attr("hidden",false);
             $("#selectedSchedulerId").val(selectedSchedulerId);
             jQuery.ajax({
                 url:"{{ url('getSpecificVideoScheduleTime') }}",
@@ -686,6 +686,7 @@
                     $("#endHours").html('<option value="'+endHours+'">'+endHours+'</option>');
                     $("#endMinutes").html('<option value="'+endMinutes+'">'+endMinutes+'</option>');
                     $("#endSeconds").html('<option value="'+endSeconds+'">'+endSeconds+'</option>');
+                    $(".loader").attr("hidden",true);
                     $("#modalTiming").modal("show");
                 }
             });
