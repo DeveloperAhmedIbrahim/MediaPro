@@ -923,7 +923,7 @@ class UserController extends Controller
         if ($scheduleType == 1) {
             $day = "all";
         } else {
-            $day = date('D');
+            $day = date('l');
         }
         // get timezone
         $timeZone = DB::table('users')->where('id', '=', $userId)->get()[0]->timezone;
@@ -931,7 +931,7 @@ class UserController extends Controller
         $scheduledVideos = DB::table('schedule_videos')->where([
             ['channel_id', '=', $channelId],
             ['schedule_day', '=', $day],
-        ])->orderBy('id', 'DESC')->get();
+        ])->orderBy('schedule_time', 'ASC')->get();
         // set timezone
         date_default_timezone_set($timeZone);
         // get current date & time
@@ -939,7 +939,6 @@ class UserController extends Controller
 
         $status = 0;
         $returnArray = array();
-
         for ($i = 0; $i < count($scheduledVideos); $i++) {
             // make proper start & end time of specific video one by one
             $startTime = date('Y-m-d') . ' ' . $scheduledVideos[$i]->schedule_time;
@@ -956,7 +955,6 @@ class UserController extends Controller
             $returnArray["endTime"] = $endTime;
             $returnArray["dateTimeNow"] = $dateTimeNow;
             $returnArray["day"] = $dateTimeNow;
-
             if ((strtotime($dateTimeNow) > strtotime($startTime)) && (strtotime($dateTimeNow) < strtotime($endTime))) {
                 // video is running
                 $status = 1;
@@ -971,6 +969,10 @@ class UserController extends Controller
             }
 
         }
+
+        $daysArray = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday",];
+        $dayIndex = 0;
+        $dayRealIndex = 0;
 
         if ($status == 1) {
             $nowTimeNew = new DateTime();
@@ -1003,15 +1005,72 @@ class UserController extends Controller
             $totalseconds = $daysinseconds + $hoursinseconds + $minutesinseconds + $seconds;
             $timeFresh = new DateTime("00:00:00");
             $cleanedSeconds = $timeFresh->modify("+ $totalseconds seconds");
-            $returnArray["commingSoonTime"] = $cleanedSeconds->format("H:i:s");
+            $returnArray["comingSoonTime"] = $cleanedSeconds->format("H:i:s");
         } else if ($status == 0) {
-            $videoFirst = DB::select(
-                DB::raw("SELECT * FROM `schedule_videos`
-                    WHERE `schedule_day` = '$day'
-                    AND `channel_id` = '$channelId'
-                    AND `schedule_time` = (SELECT MIN(`schedule_time`) FROM `schedule_videos` WHERE `channel_id` = '$channelId')"
-                )
-            );
+
+            if($day == "all")
+            {
+                $videoFirst = DB::select(
+                    DB::raw("SELECT * FROM `schedule_videos`
+                        WHERE `schedule_day` = '$day'
+                        AND `channel_id` = '$channelId'
+                        AND `schedule_time` = (SELECT MIN(`schedule_time`) FROM `schedule_videos` WHERE `channel_id` = '$channelId')"
+                    )
+                );
+            }
+            else
+            {
+                for($i = 0; $i < count($daysArray); $i++)
+                {
+                    if($day == $daysArray[$i])
+                    {
+                        $dayIndex = $i + 1;
+                        $dayRealIndex = $i;
+                        break;
+                    }
+                }
+
+                $daysIncreament = 1;
+
+
+                for($i = 0; $i < count($daysArray); $i++)
+                {
+                    $videoFirst = DB::select(
+                        DB::raw("SELECT * FROM `schedule_videos`
+                            WHERE `schedule_day` = '$daysArray[$dayIndex]'
+                            AND `channel_id` = '$channelId'
+                            AND `schedule_time` = (SELECT MIN(`schedule_time`) FROM `schedule_videos` WHERE `channel_id` = '$channelId' AND `schedule_day` = '$daysArray[$dayIndex]')"
+                        )
+                    );
+
+                    if(count($videoFirst) > 0)
+                    {
+                        break;
+                    }
+
+                    $daysIncreament++;
+
+                    if($dayIndex == (count($daysArray)-1))
+                    {
+                        $dayIndex = 0;
+                    }
+                    else
+                    {
+                        $dayIndex++;
+                    }
+                }
+            }
+
+            if($day == "all")
+            {
+                $dayNext = strtotime(date("Y-m-d H:i:s")) + 86400;
+            }
+            else
+            {
+                $dayNext = strtotime(date("Y-m-d H:i:s")) + (86400 * $daysIncreament);
+            }
+
+
             $videoId = $videoFirst[0]->video_id;
             $videoInfo = DB::table('videos')->where(['id' => $videoId])->first();
             $returnArray["videoTitle"] = $videoInfo->name;
@@ -1019,8 +1078,8 @@ class UserController extends Controller
             $returnArray["videoId"] = $videoFirst[0]->video_id;
             $returnArray["startTime"] = $videoFirst[0]->schedule_time;
             $returnArray["endTime"] = $videoFirst[0]->end_time;
-            $dayNext = strtotime(date("Y-m-d H:i:s")) + 86400;
             $dayNext = date("Y-m-d", $dayNext) . ' ' . $videoFirst[0]->schedule_time;
+            $returnArray["dayNext"] = $dayNext;
             $nowTime = date('Y-m-d H:i:s');
             $nowTimeNew = new DateTime($nowTime);
             $dayNextNew = new DateTime($dayNext);
@@ -1034,14 +1093,16 @@ class UserController extends Controller
             $minutesinseconds = intval($minutes) * 60;
             $seconds = intval($seconds);
             $totalseconds = $daysinseconds + $hoursinseconds + $minutesinseconds + $seconds;
-            $timeFresh = new DateTime("00:00:00");
-            $cleanedSeconds = $timeFresh->modify("+ $totalseconds seconds");
-            $returnArray["commingSoonTime"] = $cleanedSeconds->format("H:i:s");
+            $secs = $totalseconds % 60;
+            $hrs = $totalseconds / 60;
+            $mins = $hrs % 60;
+            $hrs = $hrs / 60;
+            $returnArray["comingSoonTime"] = (int)$hrs . ":" . (int)$mins . ":" . (int)$secs;
 
         }
 
+        $returnArray["playlistHtml"] = $this->generateSchedulePlaylistHtml($returnArray["videoTitle"]);
         $returnArray["status"] = $status;
-
         return $returnArray;
     }
 
@@ -1050,5 +1111,27 @@ class UserController extends Controller
         $dt1 = new DateTime("@0");
         $dt2 = new DateTime("@$seconds");
         return $dt1->diff($dt2)->format('%a days, %h hours, %i minutes and %s seconds');
+    }
+
+
+    public function generateSchedulePlaylistHtml($title)
+    {
+        $html =
+        '<div class="row container" style="background: rgba(0,0,50,0.5);width: 103%;height: 15%;margin-left:0;padding: 0;margin-top: 1%;">
+            <div style="width: 30%;height: 100%;justify-content: center;align-items: center;display: flex;">
+                <img src="' . asset("admin_assets/assets/img/video-preview-icon.png") . '" style="height: 80%" alt="">
+            </div>
+            <div style="width: 70%;height: 100%;justify-content: center;align-items:center;display: flex;">
+                <a href="javascript:void(0)"  style="width: 100%; white-space: nowrap; display: inherit;color: white;pointer-events:none;">
+                    <span style="overflow: hidden !important; text-overflow: ellipsis;">
+                        ' . $title . '
+                        <br>
+                        <span>NOW PLAYING</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+        <br>';
+        return $html;
     }
 }

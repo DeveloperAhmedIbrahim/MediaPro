@@ -472,20 +472,31 @@
                 var data = ev.dataTransfer.getData("text/html");
                 var videoId = $("#"+data+" .videoId").val();
                 ev.target.appendChild(document.getElementById(data));
-                $("#"+data).append('<a onclick="removeVideo(\''+data+'\')">✕</a>');
                 $("#"+data).attr("title","Double click to change time.");
                 $("#scheduleHours").html("<option value='"+hour+"' selected>"+hour+"</option>");
                 $("#scheduleMinutes").val("00").change();
                 selectedSchedulerId = $("#"+data+" .scheduleRowId").val();
                 ajaxScheduleVideo(videoId,hour,selectedSchedulerId);
-                $("#"+data).append('<span class="specificVideoTime" id="specificVideoTime_'+lastInsertedId+'">'+hour+':00:00</span>');
                 setTimeout(function(){
-                    if(lastInsertedId != 1)
+                    if(selectedSchedulerId == '' || selectedSchedulerId == null)
                     {
-                        $("#"+data+" .scheduleRowId").val(lastInsertedId);
-                        $("#selectedSchedulerId").val(lastInsertedId);
-                        $("#"+data).attr("ondblclick","openScheduleModalOnDblClick('"+lastInsertedId+"')");
+                        selectedSchedulerId = lastInsertedId;
                     }
+                    var element = document.getElementById('specificVideoTime_'+selectedSchedulerId);
+                    //If it isn't "undefined" and it isn't "null", then it exists.
+                    if(typeof(element) != 'undefined' && element != null)
+                    {
+                        $('#specificVideoTime_'+selectedSchedulerId).html(hour+':00:00');
+                    }
+                    else
+                    {
+                        $("#"+data).append('<a id="removeVideo_'+selectedSchedulerId+'" onclick="removeVideo(\''+data+'\')">✕</a>');
+                        $("#"+data).append('<span class="specificVideoTime" id="specificVideoTime_'+selectedSchedulerId+'">'+hour+':00:00</span>');
+                    }
+                    $("#"+data+" .scheduleRowId").val(selectedSchedulerId);
+                    $("#selectedSchedulerId").val(selectedSchedulerId);
+                    $("#"+data).attr("ondblclick","openScheduleModalOnDblClick('"+selectedSchedulerId+"')");
+
                     setScheduleRow();
                     getScheduleRow();
                     $("#modalTiming").modal("show");
@@ -532,7 +543,6 @@
         {
             var channelId = $("#channelId").val();
             var scheduleRowHTML = $("#scheduleHTML").html();
-            console.log(scheduleRowHTML);
             var videoSerialFirstCount = videoContainerCount;
             jQuery.ajax({
                 url:"{{ url('setScheduleRow') }}",

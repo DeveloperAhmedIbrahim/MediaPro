@@ -78,7 +78,7 @@
                                         else if($chanel->ChanelType == "linear_schedule")
                                         {
                                             $editChannelUrl = url('/linear_scheduled') . '/' . $chanel->id;
-                                            $channelType = "linearSchedule";
+                                            $channelType = "linear_schedule";
                                         }
                                     @endphp
                                     <td style="text-align:right;" onclick="GetChannelVideos('{{ $chanel->id }}','{{ $chanel->name }}','{{ $channelType }}')">

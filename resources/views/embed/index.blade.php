@@ -282,7 +282,7 @@ if(isset($channelInfo->id))
             position: absolute;
             bottom: 10%;
             right: 5%;
-            font-size: 30px;
+            font-size: 25px;
         }
     </style>
     <input type="hidden" id="volume" value="{{ $volume }}">
@@ -571,7 +571,6 @@ if(isset($channelInfo->id))
                 return false;
             };
         }
-
 
         // remove picture mode & and hide full screen mode actual button
         $(".vjs-picture-in-picture-control").remove();
@@ -907,12 +906,15 @@ if(isset($channelInfo->id))
                 },
                 success:function(response){
                     var status = response['status'];
+                    var playlistHtml = response['playlistHtml'];
+                    $(".assinedVideosContainer").html(playlistHtml);
                     videoType = "video/mp4";
                     url = response['videoUrl'];
+                    $(".playlistContainer").css("right","-30%");
                     if(status == 2 || status == 0)
                     {
                         $(".schedule-waiting-overlay").prop("hidden",false);
-                        var comingSoon = response['commingSoonTime'];
+                        var comingSoon = response['comingSoonTime'];
                         var isVideoRunning = 0;
                         titleName = response['videoTitle'];
                         videoType = "video/mp4";
@@ -921,7 +923,7 @@ if(isset($channelInfo->id))
                         setInterval(function(){
                             if(comingSoon != "00:00:00")
                             {
-                                $(".scheduled-time").html("Next Coming In " + countdown(comingSoon));
+                                $(".scheduled-time").html("Next video will start in " + countdown(comingSoon));
                                 comingSoon = countdown(comingSoon);
                             }
                             else
@@ -948,7 +950,6 @@ if(isset($channelInfo->id))
                             videoType = "video/mp4";
                             url = videoUrl;
                             videoObject.src({"type":videoType, "src":url});
-                            console.log(timePassed);
                             setTimeout(function(){
                                 videoObject.play();
                                 videoAnotherObj.currentTime = timePassed;
