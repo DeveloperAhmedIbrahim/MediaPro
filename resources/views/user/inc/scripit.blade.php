@@ -69,7 +69,6 @@
 
                     if(data['channel'].scheduledDuration == 0)
                     {
-                        $("#scheduleDays").val("Monday").change();
                         day = $("#scheduleDays").val();
                     }
 
